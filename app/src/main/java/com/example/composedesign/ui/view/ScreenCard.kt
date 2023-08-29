@@ -15,8 +15,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -35,13 +38,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.composedesign.R
 import com.example.composedesign.data.model.MessageModel
 import com.example.composedesign.utils.Constants
 
 
 @Composable
-fun HeaderPageScreen() {
+fun HeaderPageScreen(messageModel: MessageModel) {
     var isExpanded by remember { mutableStateOf(false) }
 
     Card(colors = CardDefaults.cardColors(containerColor = Color.LightGray), modifier = Modifier
@@ -59,7 +61,7 @@ fun HeaderPageScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.profile_1),
+                    painter = painterResource(id = messageModel.image),
                     contentDescription = "profile",
                     modifier = Modifier
                         .size(130.dp)
@@ -72,20 +74,19 @@ fun HeaderPageScreen() {
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = "User 1",
+                    text = messageModel.name,
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White
                 )
 
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                LazyColumn(modifier = Modifier.height(300.dp)) {
                     items(Constants.messageData) {
                         ItemCardExpanded(messageModel = it)
                     }
                 }
 
             }
-        }
-        else {
+        } else {
             Row(
                 modifier = Modifier
                     .padding(all = 8.dp)
@@ -93,13 +94,13 @@ fun HeaderPageScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.profile_1),
+                    painter = painterResource(id = messageModel.image),
                     contentDescription = "profile",
                     modifier = Modifier
                         .size(50.dp)
                         .clip(CircleShape)
                         .border(
-                            width = 1.5.dp, color = Color.Green, shape = CircleShape
+                            width = 1.5.dp, color = Color.Black, shape = CircleShape
                         ),
                     contentScale = ContentScale.Crop
                 )
@@ -107,7 +108,7 @@ fun HeaderPageScreen() {
                 Spacer(modifier = Modifier.width(10.dp))
 
                 Text(
-                    text = "User 1",
+                    text = messageModel.name,
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White,
                 )
@@ -170,6 +171,16 @@ fun ItemCardExpanded(messageModel: MessageModel) {
                 )
             }
 
+        }
+    }
+}
+
+
+@Composable
+fun HomePage() {
+    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+        items(Constants.headerData) {
+            HeaderPageScreen(messageModel = it)
         }
     }
 }
